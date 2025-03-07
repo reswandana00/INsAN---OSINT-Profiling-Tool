@@ -2,7 +2,8 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Body
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
 from pydantic import BaseModel
-from AnalyzeProfile import AnalyzeProfile
+from AnalyzeProfile import AnalyzeProfile, GenerateBio
+from datetime import datetime
 
 class Message(BaseModel):
     content: str
@@ -46,17 +47,23 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"Received From Client: {data}")
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]    Received From Client: {data}")
             
             if data == "Analyzing...":
+                await websocket.send_text(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Starting analysis...")
                 try:
-                    await websocket.send_text("Starting analysis...")
                     AnalyzeProfile()
-                    await websocket.send_text("Analysis Complete")
+                    await websocket.send_text("Profile analyzed")
+                    bio_result = GenerateBio()
+                    if bio_result:
+                        print("Bio generation completed")
+                        await websocket.send_text("Bio Complete")
+                        await websocket.send_text("Analysis Complete")
+                        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] All analysis steps completed")
                 except Exception as e:
+                    print(f"Error: {e}")
                     await websocket.send_text(f"Analysis failed: {str(e)}")
 
-            
     except WebSocketDisconnect:
         connected_clients.remove(websocket)
         print(f"Client disconnected. Remaining clients: {len(connected_clients)}")

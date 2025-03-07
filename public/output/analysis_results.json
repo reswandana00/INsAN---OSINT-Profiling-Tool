@@ -1,18 +1,14 @@
 {
   "raw_data": {
     "bio": {
-      "name": "\u05b4 lele",
-      "briefInfo": "This is an Instagram user with 983 followers and following 953 accounts.",
-      "additional": "Their content focuses on  and  and "
+      "name": "",
+      "briefInfo": "",
+      "additional": ""
     },
     "images": {
-      "profile": " In the image, there is a young woman with long red hair. She appears to be indoors and is looking at something off-camera, possibly reacting to an unexpected event or someone she's not visible to. The woman has a neutral expression on her face, and her cheeks are lightly flushed. She is wearing what seems to be a sleeveless top with a round neckline. Her pose suggests that she may have been caught off-guard or surprised by something. There are no texts or distinctive features in the background of the photo. The lighting in the image is natural, suggesting it might be daylight or an interior space with windows allowing for natural light. ",
-      "posts": {
-        "post1": " The image shows a woman standing on what appears to be an elevated platform, such as a stage or a balcony. She has long hair and is wearing a black top with a neckline. Her expression is neutral, and she stands with her arms by her sides. The background is minimalist with a concrete wall and a metal railing behind her, which suggests that this photo might have been taken in an urban setting or an event space. ",
-        "post2": " In the image, there is a person standing at an escalator in what appears to be a mall or shopping center. The individual is wearing a light-colored jacket over a dark top, blue jeans, and white sneakers. They also have on a white headband that could possibly be a face mask given the context of the image.\n\nThe person is posing with one hand resting on their hip, while the other hand is holding onto the escalator rail. They are looking off to the side, not directly at the camera. The setting suggests a modern and clean interior environment, with white walls and a shiny floor reflecting the fluorescent lighting typical in such spaces.\n\nThe person's hair is styled in a bob cut, and they are wearing makeup that includes lipstick and possibly eyeliner. The overall attire is casual and contemporary, suitable for a day out shopping or running errands. ",
-        "post3": " The image shows a vintage suitcase on a table, open to reveal a record player inside. The suitcase has a black leather exterior with a gold-colored lock and the word \"VINGERS\" in white script. A vinyl record is placed on the turntable, ready for use. To the right of the suitcase, there's a framed photograph that appears to be of a person in a costume or mask, but the details are not clearly visible due to the angle and size of the frame. There's also a small stack of what seems to be DVD cases with some text on them; however, the text is too small to read clearly. The overall setting suggests an atmosphere of nostalgia or vintage appeal, possibly in a store or cafe that sells vinyl records and other related items. "
-      }
+      "post1.jpg": "",
+      "profile.jpg": ""
     }
   },
-  "analysis": " Personal Information:\nName : Unknown\nHobby : Posting on Instagram\nAge (Range) : Unknown\nSex : Female\nJob (have or not): It is not clear from the information provided if she has a job or not.\nLocation (if exist) : Urban setting, as suggested by the post about an escalator in a mall or shopping center.\n\nBehaviour Context:\nTaste of Music : It is not possible to determine her taste in music based on the given information.\nTaste of Movie : It is not possible to determine her taste in movies based on the given information.\nFavorite Color : It is not possible to determine her favorite color based on the given information.\nFavorite Food : It is not possible to determine her favorite food based on the given information.\nFavorite Sport : It is not possible to determine her favorite sport based on the given information.\nFavorite Animal : It is not possible to determine her favorite animal based on the given information.\nFavorite Book : It is not possible to determine her favorite book based on the given information.\nFavorite TV Show : It is not possible to determine her favorite TV show based on the given information.\nFavorite Game : It is not possible to determine her favorite game based on the given information.\n\nAdditional Information:\nBio Information: The user's content focuses on fashion and beauty, as suggested by the additional information provided in the JSON data. "
+  "analysis": ""
 }

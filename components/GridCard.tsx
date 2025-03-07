@@ -27,7 +27,7 @@ const GridCard = () => {
   return (
     <div className="lg:scale-120 md:-mt-10 lg:-mt-10">
       <SparkleText />
-      <div className="-mt-36">
+      <div className="-mt-36 ">
         <FotoName />
       </div>
       <div className="-mt-48">

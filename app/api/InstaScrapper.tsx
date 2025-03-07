@@ -3,7 +3,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import fs from "fs/promises";
 import path from "path";
-import { createWriteStream, rmSync, writeFileSync } from "fs";
+import { createWriteStream, writeFileSync } from "fs";
 import { generatePersonPrompt } from "./UserInfo";
 
 interface InstagramProfile {
@@ -18,9 +18,10 @@ interface InstagramProfile {
   mediaCount: number;
 }
 
-function saveJsonFile(data: any, filePath: string) {
+function saveJsonFile(data: any, filePath: string, username: string) {
   try {
     const userInfo = {
+      username: username,
       name: data.profile.fullName,
       briefInfo: `This is an Instagram user with ${data.profile.followersCount} followers and following ${data.profile.followingCount} accounts.`,
       additional:
@@ -42,6 +43,13 @@ function saveJsonFile(data: any, filePath: string) {
 export const scrapeInstagramProfile = async (
   username: string
 ): Promise<InstagramProfile> => {
+  const parseFollowerCount = (text: string): string => {
+    if (!text) return "0";
+
+    // Remove commas and spaces
+    return text.replace(/[,\s]/g, "");
+  };
+
   const url = `https://www.instagram.com/${username}/`;
   try {
     const { data } = await axios.get(url);
@@ -65,12 +73,18 @@ export const scrapeInstagramProfile = async (
     const fullName = $('meta[property="og:title"]')
       .attr("content")
       ?.split(" (@")[0];
-    const followersCount = $('meta[name="description"]')
-      .attr("content")
-      ?.match(/(\d+)\s*Followers/i)?.[1];
-    const followingCount = $('meta[name="description"]')
-      .attr("content")
-      ?.match(/(\d+)\s*Following/i)?.[1];
+    // Update in scrapeInstagramProfile function:
+    const followersCount = parseFollowerCount(
+      $('meta[name="description"]')
+        .attr("content")
+        ?.match(/(\d+[.,]?\d*[KM]?)\s*Followers/i)?.[1] || "0"
+    );
+
+    const followingCount = parseFollowerCount(
+      $('meta[name="description"]')
+        .attr("content")
+        ?.match(/(\d+[.,]?\d*[KM]?)\s*Following/i)?.[1] || "0"
+    );
 
     return {
       biography: bio || "No biography available",
@@ -110,7 +124,7 @@ const downloadImage = async (url: string, outputPath: string) => {
   }
 };
 
-const InstaScrapper = async (username: string, postCount: number = 3) => {
+const InstaScrapper = async (username: string, postCount: number = 10) => {
   const scraper = new InstagramScraper();
   const profileData = await scrapeInstagramProfile(username);
 
@@ -121,7 +135,9 @@ const InstaScrapper = async (username: string, postCount: number = 3) => {
   // Download profile picture
   const profilePicPath = path.join(outputPath, "profile.jpg");
   await downloadImage(profileData.hdProfilePicUrl, profilePicPath);
-  console.log(`Downloaded profile picture to ${profilePicPath}`);
+  console.log(
+    `[${new Date().toISOString()}] Downloaded profile picture to ${profilePicPath}`
+  );
 
   return scraper
     .getPosts(username, postCount)
@@ -159,7 +175,7 @@ const InstaScrapper = async (username: string, postCount: number = 3) => {
 
         // Save bio JSON without re-reading
         const bioJsonPath = path.join(outputPath, "bio.json");
-        saveJsonFile(parsedData, bioJsonPath);
+        saveJsonFile(parsedData, bioJsonPath, username);
 
         // Download images
         await Promise.all(

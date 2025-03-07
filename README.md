@@ -12,6 +12,12 @@ yarn dev
 pnpm dev
 # or
 bun dev
+
+# run back-end
+cd app\api; uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+
+run front-end
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

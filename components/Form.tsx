@@ -19,7 +19,12 @@ export default function Form() {
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
-        if (event.data === "Analysis Complete") {
+        console.log("Received message:", event.data);
+        if (
+          event.data === "Bio Complete" ||
+          event.data === "Analysis Complete"
+        ) {
+          console.log("Reloading after completion");
           window.location.reload();
         }
       };

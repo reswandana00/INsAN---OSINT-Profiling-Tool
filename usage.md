@@ -1,0 +1,3 @@
+PS E:\Project\insan-osint-saas> **npm run dev**
+
+PS E:\Project\insan-osint-saas> **cd E:\Project\insan-osint-saas\app\api; uvicorn server:app --host 0.0.0.0 --port 8000 --reload**

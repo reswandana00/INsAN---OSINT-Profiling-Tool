@@ -66,6 +66,15 @@ export default async function DirDelete() {
       JSON.stringify(imageDataJson, null, 2)
     );
 
+    // Reset bio.json
+    const bioAnalysisJson = {
+      analysis: "",
+    };
+    fs.writeFileSync(
+      "public/output/bio_analysis.json",
+      JSON.stringify(bioAnalysisJson, null, 2)
+    );
+
     // Remove all JPG files from output directory
     const outputDir = "public/output";
     const files = fs.readdirSync(outputDir);

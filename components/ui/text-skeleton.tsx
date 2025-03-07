@@ -15,6 +15,17 @@ export default function TextSkeleton({
 }: TextSkeletonProps) {
   const defaultLines = 7;
 
+  const formatBoldText = (text: string | undefined) => {
+    if (typeof text !== "string") return text;
+
+    return text.split(/(\*\*.*?\*\*)/).map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={index}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  };
+
   return (
     <Card className={`${className} space-y-5 p-4`} radius="lg">
       <div className="space-y-3 mt-5 overflow-auto max-h-52 scrollbar-hide">
@@ -37,7 +48,7 @@ export default function TextSkeleton({
               ))
           : text.map((line, index) => (
               <div key={index} className={textClassName}>
-                {line}
+                {formatBoldText(line)}
               </div>
             ))}
       </div>

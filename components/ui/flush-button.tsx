@@ -13,7 +13,9 @@ export default function FlushButton() {
     const result = await response.json();
 
     if (result.success) {
-      router.refresh();
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     }
   };
 

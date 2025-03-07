@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { NextResponse } from "next/server";
+import fs from "fs/promises";
+import path from "path";
 
 export async function POST() {
   try {
@@ -31,6 +31,15 @@ export async function POST() {
     await fs.writeFile(
       "public/output/bio.json",
       JSON.stringify(bioJson, null, 2)
+    );
+
+    // Reset bio.json
+    const bioAnalysisJson = {
+      analysis: "",
+    };
+    await fs.writeFile(
+      "public/output/bio_analysis.json",
+      JSON.stringify(bioAnalysisJson, null, 2)
     );
 
     // Reset analysis_results.json
@@ -77,8 +86,14 @@ export async function POST() {
       }
     }
 
-    return NextResponse.json({ success: true, message: "Directory cleaned successfully" });
+    return NextResponse.json({
+      success: true,
+      message: "Directory cleaned successfully",
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, message: "Error cleaning directory" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: "Error cleaning directory" },
+      { status: 500 }
+    );
   }
 }
