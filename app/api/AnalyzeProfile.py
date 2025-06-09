@@ -1,12 +1,13 @@
 import os
 import json
-from groq import Groq
+import google.generativeai as genai
+from google.genai import types
 from ImageDescribe import ImageDescribe
 
-GROQ_API = "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"
+GEMINI_API = "AIzaSyDE_eF5teBtL6ua_aIdYUebFjy8hiYCyDM"
 
 def GenerateBio():
-    client = Groq(api_key=GROQ_API)
+    genai.configure(api_key=GEMINI_API)
     base_path = os.path.join(os.path.dirname(__file__), '..', '..', 'public', 'output')
 
     raw_data = {
@@ -70,24 +71,13 @@ About :
     context += "\n\nPrevious Analysis:\n" + raw_data['analysis']
 
     print("Analyzing profile...")
-    completion = client.chat.completions.create(
-        model="llama-3.2-90b-vision-preview",
-        messages=[
-            {
-                "role": "user",
-                "content": f"{bio_template}\n\nBased on this information:\n{context}"
-            }
-        ],
-        temperature=1,
-        max_completion_tokens=1024,
-        top_p=1,
-        stream=False,
-        stop=None
-    )
+    model = genai.GenerativeModel('gemini-pro')
+    prompt = f"{bio_template}\n\nBased on this information:\n{context}"
+    
+    response = model.generate_content(prompt)
+    response_text = response.text
 
-    response_text = completion.choices[0].message.content
-
-     # Extract type from response
+    # Extract type from response
     if "TYPE: person" in response_text:
         raw_data['type'] = "person"
     elif "TYPE: non-person" in response_text:
@@ -105,7 +95,7 @@ About :
 
 
 def AnalyzeProfile():
-    client = Groq(api_key=GROQ_API)
+    genai.configure(api_key=GEMINI_API)
     
     base_path = os.path.join(os.path.dirname(__file__), '..', '..', 'public', 'output')
     raw_data = {
@@ -183,25 +173,13 @@ Additional Information:
             context += f"\n{img_type}:\n{desc}\n"
 
     print("Analyzing profile...")
-    # Get the final analysis using Groq
-    completion = client.chat.completions.create(
-        model="llama-3.2-90b-vision-preview",
-        messages=[
-            {
-                "role": "user",
-                "content": f"{template}\n\nBased on this information:\n{context}"
-            }
-        ],
-        temperature=1,
-        max_completion_tokens=1024,
-        top_p=1,
-        stream=False,
-        stop=None
-    )
+    model = genai.GenerativeModel('gemma-3-27b-it')
+    prompt = f"{template}\n\nBased on this information:\n{context}"
+    
+    response = model.generate_content(prompt)
+    response_text = response.text
 
-    response_text = completion.choices[0].message.content
-
-     # Extract type from response
+    # Extract type from response
     if "TYPE: person" in response_text:
         raw_data['type'] = "person"
     elif "TYPE: non-person" in response_text:

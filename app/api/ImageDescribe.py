@@ -1,15 +1,16 @@
 import os
 import json
-from groq import Groq
 from PIL import Image
 import base64
 from io import BytesIO
 import time
+import google.generativeai as genai
+from google.genai import types
 
-GROQ_API = "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"
+GEMINI_API = "AIzaSyDE_eF5teBtL6ua_aIdYUebFjy8hiYCyDM"
 
 def ImageDescribe():
-    client = Groq(api_key=GROQ_API)
+    genai.configure(api_key=GEMINI_API)
     
     base_path = os.path.join(os.path.dirname(__file__), '..', '..', 'public', 'output')
     raw_image_data = {
@@ -38,50 +39,40 @@ def ImageDescribe():
         if os.path.exists(image_path):
             print(f"Processing {image_path}")
             try:
-                # Convert image to base64
+                # Load and process image
                 with Image.open(image_path) as img:
-                    buffered = BytesIO()
-                    img.save(buffered, format="JPEG")
-                    img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
-                    img_url = f"data:image/jpeg;base64,{img_base64}"
-
-                # Process with Groq with retry mechanism
-                max_retries = 3
-                for attempt in range(max_retries):
-                    try:
-                        completion = client.chat.completions.create(
-                            model="llama-3.2-90b-vision-preview",
-                            messages=[
-                                {
-                                    "role": "user",
-                                    "content": [
-                                        {
-                                            "type": "text",
-                                            "text": "Describe this image in detail in Bahasa Indonesia"
-                                        },
-                                        {
-                                            "type": "image_url",
-                                            "image_url": {
-                                                "url": img_url
-                                            }
-                                        }
-                                    ]
-                                }
-                            ],
-                            temperature=0.7,
-                            max_completion_tokens=516,
-                            top_p=1,
-                            stream=False
-                        )
-                        
-                        response_text = completion.choices[0].message.content
-                        break
-                    except Exception as e:
-                        if attempt == max_retries - 1:
-                            print(f"Failed to process image after {max_retries} attempts: {str(e)}")
-                            response_text = "Failed to process image"
-                        else:
-                            time.sleep(2)  # Wait before retrying
+                    # Process with Gemini with retry mechanism
+                    max_retries = 3
+                    for attempt in range(max_retries):
+                        try:
+                            model = genai.GenerativeModel('gemma-3-27b-it')
+                            
+                            # Prepare image for Gemini
+                            if img.mode != 'RGB':
+                                img = img.convert('RGB')
+                            
+                            # Create BytesIO object to hold the image data
+                            buffered = BytesIO()
+                            img.save(buffered, format="JPEG")
+                            image_bytes = buffered.getvalue()
+                            
+                            # Create image part for Gemini
+                            image_part = {
+                                "mime_type": "image/jpeg",
+                                "data": base64.b64encode(image_bytes).decode('utf-8')
+                            }
+                            
+                            prompt = "Describe this image in detail in Bahasa Indonesia"
+                            
+                            response = model.generate_content([prompt, image_part])
+                            response_text = response.text
+                            break
+                        except Exception as e:
+                            if attempt == max_retries - 1:
+                                print(f"Failed to process image after {max_retries} attempts: {str(e)}")
+                                response_text = "Failed to process image"
+                            else:
+                                time.sleep(2)  # Wait before retrying
                 
                 filename = os.path.basename(image_path)
                 if filename == 'profile.jpg':
