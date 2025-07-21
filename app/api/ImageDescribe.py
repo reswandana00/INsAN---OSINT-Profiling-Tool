@@ -7,7 +7,7 @@ import time
 import google.generativeai as genai
 from google.genai import types
 
-GEMINI_API = "AIzaSyDE_eF5teBtL6ua_aIdYUebFjy8hiYCyDM"
+GEMINI_API = "AIzaSyDUd_0s6BZleNRa9TH_TWlZxI0VmSA0ZDE"
 
 def ImageDescribe():
     genai.configure(api_key=GEMINI_API)
