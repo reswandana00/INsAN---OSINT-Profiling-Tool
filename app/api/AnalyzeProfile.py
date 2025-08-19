@@ -4,7 +4,7 @@ import google.generativeai as genai
 from google.genai import types
 from ImageDescribe import ImageDescribe
 
-GEMINI_API = "AIzaSyDUd_0s6BZleNRa9TH_TWlZxI0VmSA0ZDE"
+GEMINI_API = "replace_me"
 
 def GenerateBio():
     genai.configure(api_key=GEMINI_API)
